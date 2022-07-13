@@ -30,14 +30,10 @@ namespace APINasa.Controllers
             else
             {
                 var entity = _model.Obtenertop3(days);
-                if (entity.Result.Count == 0)
-                {
-                    return NotFound();
-                }
-                else
-                {
+               
+              
                     return Ok(entity);
-                }
+                
 
             }
 
