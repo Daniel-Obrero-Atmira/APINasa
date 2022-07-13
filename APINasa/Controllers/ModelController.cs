@@ -25,14 +25,23 @@ namespace APINasa.Controllers
         {
             if (days <= 0 || days > 7)
             {
+                Response.Headers.Add("Error", "El valor days debe de estar comprendido entre 1 y 7");
                 return BadRequest();
             }
             else
             {
                 var entity = _model.Obtenertop3(days);
-               
-              
+
+                if (entity.Result.Count == 0)
+                {
+                    Response.Headers.Add("Error", "La respuesta devuelta esta vacía");
                     return Ok(entity);
+                }
+                else
+                {
+                    return Ok(entity);
+                }
+                    
                 
 
             }
