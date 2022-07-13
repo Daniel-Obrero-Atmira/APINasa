@@ -1,3 +1,4 @@
+using APINasa.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -35,6 +36,7 @@ namespace APINasa
                     Title = "API de la Nasa"
                 });
             });
+            services.AddTransient<IAPI, API>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
