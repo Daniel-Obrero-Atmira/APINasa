@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace APINasa.DataAccess
 {
-    class API : IAPI
+    public class API : IAPI
     {
         public async Task<List<Meteorito>> Obtenertop3(int dias)
         {
