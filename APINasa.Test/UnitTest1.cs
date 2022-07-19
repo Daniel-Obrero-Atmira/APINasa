@@ -14,14 +14,14 @@ namespace APINasa.Test
     public class UnitTest1
     {
         private readonly ModelController _model;
-        private readonly Mock<API> _apimock= new Mock<API>();
+        private readonly Mock<IAPI> _apimock= new Mock<IAPI>();
         public UnitTest1()
         {
             _model = new ModelController(_apimock.Object);
         }
         
         [Fact]
-        public async Task Casovalido()
+        public async Task CasovalidoAPI()
         {
 
             List<Meteorito> meteoros = new List<Meteorito>();
@@ -44,7 +44,17 @@ namespace APINasa.Test
             var ok = _apimock.Object.Obtenertop3(3);
 
 
-            Assert.Equal(result.ToString(), ok.ToString());
+            Assert.Equal(ok.ToString(), customer.ToString());
+        }
+        [Fact]
+        public async Task CasoValido()
+        {
+
+            int dia = 4;
+            var customer = (OkObjectResult)await _model.GetTop3(dia);
+            var ok = (OkObjectResult)await _model.GetTop3(dia);
+
+            Assert.Equal(customer.ToString(), ok.ToString());
         }
         [Fact]
         public async Task Casonovalidofueraderango()
