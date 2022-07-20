@@ -18,7 +18,7 @@ namespace APINasa.DataAccess
             var diaactual = fechaactual.Split("-");
             string fechafinal = calcularfecha(dias);
             List<List<Fecha>> todos = new List<List<Fecha>>();
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://www.neowsapp.com/rest/v1/feed?start_date="+fechaactual+"&end_date="+fechafinal+"&detailed=false&api_key=nUIaTOBMbI7BNyvjiRruwLrAWeARkE9qaOcbUBg3");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://www.neowsapp.com/rest/v1/feed?start_date=" + fechaactual + "&end_date=" + fechafinal + "&detailed=false&api_key=nUIaTOBMbI7BNyvjiRruwLrAWeARkE9qaOcbUBg3");
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             using (Stream stream = (Stream)response.GetResponseStream())
             using (StreamReader reader = new StreamReader(stream))
@@ -36,9 +36,15 @@ namespace APINasa.DataAccess
                     todos.Add(ejemplo1.near_earth_objects.fecha);
                     p++;
                 }
-                
+
             }
             return ordenar(clasificar(todos));
+        }
+
+        public async Task<List<Meteorito>> Insertar3Meteoritos(int dias)
+        {
+
+
         }
 
         protected List<Meteorito> clasificar(List<List<Fecha>> todos)

@@ -48,5 +48,11 @@ namespace APINasa.Controllers
 
 
         }
+        [HttpPost]
+        [Route("SaveAsteroids")]
+        public async Task<IActionResult> GuardarTop3()
+        {
+            return Ok();
+        }
     }
 }
