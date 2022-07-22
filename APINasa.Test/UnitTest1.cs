@@ -13,11 +13,11 @@ namespace APINasa.Test
 {
     public class UnitTest1
     {
-        private readonly ModelController _model;
-        private readonly Mock<IAPI> _apimock= new Mock<IAPI>();
+        private readonly AsteroidsController _model;
+        private readonly Mock<IMeteoritoService> _apimock= new Mock<IMeteoritoService>();
         public UnitTest1()
         {
-            _model = new ModelController(_apimock.Object);
+            _model = new AsteroidsController(_apimock.Object);
         }
         
         [Fact]
@@ -38,13 +38,13 @@ namespace APINasa.Test
                 meteoros.Add(meteorito);
             }
 
-            var customer=Task.FromResult(meteoros);
-            var result = _apimock.Setup(x => x.Obtenertop3(3)).Returns(customer);
+            
+            var result = _apimock.Setup(x => x.Obtenertop3(3)).Returns(meteoros);
 
             var ok = _apimock.Object.Obtenertop3(3);
 
 
-            Assert.Equal(ok.ToString(), customer.ToString());
+            Assert.Equal(ok.ToString(), meteoros.ToString());
         }
         [Fact]
         public async Task CasoValido()

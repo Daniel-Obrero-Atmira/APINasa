@@ -1,4 +1,5 @@
-﻿using APINasa.DataAccess;
+﻿using APINasa.Context;
+using APINasa.DataAccess;
 using APINasa.Models;
 using Newtonsoft.Json;
 using System;
@@ -10,9 +11,15 @@ using System.Threading.Tasks;
 
 namespace APINasa.DataAccess
 {
-    public class API : IAPI
+    public class MeteoritoService : IMeteoritoService
     {
-        public async Task<List<Meteorito>> Obtenertop3(int dias)
+        private readonly IContextDB _model;
+
+        public MeteoritoService(IContextDB model)
+        {
+            _model = model;
+        }
+        public List<Meteorito> Obtenertop3(int dias)
         {
             string fechaactual = DateTime.Now.ToString("yyyy-MM-dd");
             var diaactual = fechaactual.Split("-");
@@ -41,10 +48,26 @@ namespace APINasa.DataAccess
             return ordenar(clasificar(todos));
         }
 
-        public async Task<List<Meteorito>> Insertar3Meteoritos(int dias)
+        public List<Meteorito> Insertar3Meteoritos(int dias)
         {
+            List<Meteorito> lista = Obtenertop3(dias);
+            List<Meteorito> listareal = new List<Meteorito>();
+            List<Meteorito> lista2 = _model.TopsMeteoritos.ToList();
 
-
+            foreach (var meteorito in lista)
+            {
+                
+                    if (!lista2.Contains(meteorito))
+                    {
+                        listareal.Add(meteorito);
+                        _model.TopsMeteoritos.Add(meteorito);
+                        
+                    }          
+                
+                
+            }
+            _model.SaveChanges();
+            return listareal;
         }
 
         protected List<Meteorito> clasificar(List<List<Fecha>> todos)
@@ -58,13 +81,28 @@ namespace APINasa.DataAccess
                     if (nuevo[j].is_potentially_hazardous_asteroid)
                     {
                         float media = (nuevo[j].estimated_diameter.kilometers.estimated_diameter_min + nuevo[j].estimated_diameter.kilometers.estimated_diameter_max) / 2;
-                        Meteorito meteoro = new Meteorito(
+                        if (i==0)
+                        {
+                            Meteorito meteoro = new Meteorito(
                             nuevo[j].name,
                             media,
                             nuevo[j].close_approach_data[0].relative_velocity.kilometers_per_hour,
-                            nuevo[j].close_approach_data[0].close_approach_date,
+                            DateTime.Now.ToString("yyyy-MM-dd"),
                             nuevo[j].close_approach_data[0].orbiting_body);
-                        meteoritos.Add(meteoro);
+                            meteoritos.Add(meteoro);
+                        }
+                        else
+                        {
+                            Meteorito meteoro = new Meteorito(
+                            nuevo[j].name,
+                            media,
+                            nuevo[j].close_approach_data[0].relative_velocity.kilometers_per_hour,
+                            calcularfecha(i),
+                            nuevo[j].close_approach_data[0].orbiting_body);
+                            meteoritos.Add(meteoro);
+                        }
+                        
+                        
                     }
                 }
 

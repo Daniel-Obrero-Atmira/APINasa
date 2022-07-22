@@ -1,8 +1,10 @@
+using APINasa.Context;
 using APINasa.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +29,9 @@ namespace APINasa
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ContextDB>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddControllers();
             services.AddSwaggerGen(x =>
             {
@@ -36,7 +41,8 @@ namespace APINasa
                     Title = "API de la Nasa"
                 });
             });
-            services.AddTransient<IAPI, API>();
+            services.AddTransient<IMeteoritoService, MeteoritoService>();
+            services.AddTransient<IContextDB,ContextDB>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

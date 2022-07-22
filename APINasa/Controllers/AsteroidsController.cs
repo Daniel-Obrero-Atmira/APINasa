@@ -1,4 +1,5 @@
 ﻿using APINasa.DataAccess;
+using APINasa.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,11 +11,11 @@ namespace APINasa.Controllers
 {
     [Route("asteroids")]
     [ApiController]
-    public class ModelController : ControllerBase
+    public class AsteroidsController : ControllerBase
     {
-        private readonly IAPI _model;
+        private readonly IMeteoritoService _model;
 
-        public ModelController(IAPI modelItemRepository)
+        public AsteroidsController(IMeteoritoService modelItemRepository)
         {
             _model = modelItemRepository;
         }
@@ -32,7 +33,7 @@ namespace APINasa.Controllers
             {
                 var entity = _model.Obtenertop3(days);
 
-                if (entity.Result.Count == 0)
+                if (entity.Count == 0)
                 {
                     //Response.Headers.Add("Error", "La respuesta devuelta esta vacía");
                     return Ok(entity);
@@ -50,9 +51,31 @@ namespace APINasa.Controllers
         }
         [HttpPost]
         [Route("SaveAsteroids")]
-        public async Task<IActionResult> GuardarTop3()
+        public async Task<IActionResult> GuardarTop3(int days)
         {
-            return Ok();
+            if (days <= 0 || days > 7)
+            {
+                //Response.Headers.Add("Error", "El valor days debe de estar comprendido entre 1 y 7");
+                return BadRequest();
+            }
+            else
+            {
+                var entity = _model.Insertar3Meteoritos(days);
+
+                if (entity.Count == 0)
+                {
+                    //Response.Headers.Add("Error", "La respuesta devuelta esta vacía");
+                    return Ok(entity);
+                }
+                else
+                {
+                    
+                    return Ok(entity);
+                }
+
+
+
+            }
         }
     }
 }
